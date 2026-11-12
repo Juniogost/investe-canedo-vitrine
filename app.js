@@ -2,30 +2,13 @@
   var D = window.IC_DATA;
   var BRL = function(v){ return 'R$ ' + Math.round(v).toLocaleString('pt-BR'); };
 
-  // layout switch
-  var params = new URLSearchParams(location.search);
-  var layout = params.get('l') || localStorage.getItem('ic-layout') || 'netflix';
-  if(!['netflix','grade','revista'].includes(layout)) layout='netflix';
-  document.body.dataset.layout = layout;
-  function markActive(){
-    document.querySelectorAll('.sw').forEach(function(b){
-      b.classList.toggle('active', b.dataset.l === document.body.dataset.layout);
-    });
-  }
-  document.querySelectorAll('.sw').forEach(function(b){
-    b.addEventListener('click', function(){
-      document.body.dataset.layout = b.dataset.l;
-      localStorage.setItem('ic-layout', b.dataset.l);
-      var u = new URL(location); u.searchParams.set('l', b.dataset.l);
-      history.replaceState(null,'',u);
-      markActive(); render();
-    });
-  });
-  markActive();
+  // layout final escolhido por Junio: Netflix escuro
+  document.body.dataset.layout = 'netflix';
 
   // generic WA links
   document.getElementById('wa-float').href = D.wa_generic;
   document.getElementById('wa-footer').href = D.wa_generic;
+  document.getElementById('wa-top').href = D.wa_generic;
 
   var CAT_ORDER = ['lancamentos','apartamentos','casas','terrenos','chacaras'];
 
@@ -81,27 +64,6 @@
       '</div>';
     app.appendChild(hero);
 
-    // filters (grade layout)
-    if(document.body.dataset.layout === 'grade'){
-      var f = document.createElement('div'); f.className='filters';
-      var mk = function(id,label){
-        var b=document.createElement('button'); b.className='chip'+(id==='tudo'?' active':''); b.textContent=label;
-        b.addEventListener('click',function(){
-          f.querySelectorAll('.chip').forEach(function(c){c.classList.remove('active');});
-          b.classList.add('active');
-          document.querySelectorAll('[data-cat]').forEach(function(r){
-            r.classList.toggle('hidden', id!=='tudo' && r.dataset.cat!==id);
-          });
-        });
-        f.appendChild(b);
-      };
-      mk('tudo','Tudo');
-      CAT_ORDER.forEach(function(c){ mk(c, D.cats[c]); });
-      mk('mapas','Mapas e 3D');
-      app.appendChild(f);
-    }
-
-    // first block (Reserva do Parque) right after hero? No: property rows first, blocks interleaved.
     var rows = {};
     CAT_ORDER.forEach(function(c){
       rows[c] = D.props.filter(function(p){return p.cat===c;});
@@ -135,6 +97,30 @@
     addRow('Portal','terrenos');
     addRow('Portal','chacaras');
     addBlock(D.sections[3]); // Investe em Lotes
+    addPriceList();
+  }
+
+  // Lista de preços para conferência (tabela vigente, em revisão por Junio)
+  function addPriceList(){
+    var sec = document.createElement('section'); sec.className='block pricelist';
+    sec.innerHTML = '<p class="block-tag">Conferência</p><h2 class="block-title">Lista de preços</h2>'+
+      '<p class="block-desc">Valores da tabela vigente publicada no portal, em conferência. Qualquer correção, fale no WhatsApp.</p>';
+    CAT_ORDER.forEach(function(c){
+      var list = D.props.filter(function(p){return p.cat===c;}).sort(function(a,b){return b.price-a.price;});
+      if(!list.length) return;
+      var det = document.createElement('details'); det.className='pl-cat';
+      var sum = document.createElement('summary');
+      sum.innerHTML = D.cats[c] + ' <span>'+list.length+'</span>';
+      det.appendChild(sum);
+      var ul = document.createElement('ul');
+      list.forEach(function(p){
+        var li = document.createElement('li');
+        li.innerHTML = '<span class="pl-name">'+p.name+'</span><span class="pl-price">'+BRL(p.price)+'</span>';
+        ul.appendChild(li);
+      });
+      det.appendChild(ul); sec.appendChild(det);
+    });
+    app.appendChild(sec);
   }
   render();
 })();
