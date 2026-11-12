@@ -50,7 +50,7 @@
     var destaques = D.props.filter(function(p){return p.destaque;});
     var hero = document.createElement('section'); hero.className='hero';
     hero.innerHTML =
-      '<img class="hero-bg" src="https://investecanedo.com.br/og-image.jpg" alt="">' +
+      '<img class="hero-bg" src="og-image.jpg" alt="">' +
       '<div class="hero-inner">' +
         '<p class="hero-kicker">Senador Canedo · Goiás</p>' +
         '<h1>Imóveis para investir e morar,<br>num só lugar.</h1>' +
