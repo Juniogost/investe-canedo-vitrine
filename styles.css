@@ -125,3 +125,18 @@ body[data-layout="revista"] .block .card-open{background:#1c1a16;color:var(--gol
 body[data-layout="revista"] .footer{border-top:1px solid rgba(28,26,22,.14)}
 body[data-layout="revista"] .f-note{color:#7d7668}
 body[data-layout="revista"] .f-note a{color:#8a6d1f}
+
+/* ===== versão final: CTA no topo + lista de preços ===== */
+.top-cta{font-size:13px;font-weight:700;color:#141414;background:var(--gold);padding:8px 16px;border-radius:999px}
+.pricelist .pl-cat{border-top:1px solid rgba(201,168,76,.18)}
+.pricelist .pl-cat:first-of-type{border-top:none}
+.pricelist summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;
+  padding:13px 2px;font-weight:700;font-size:15px;color:var(--gold-2)}
+.pricelist summary::-webkit-details-marker{display:none}
+.pricelist summary::after{content:"+";font-size:18px;color:var(--muted)}
+.pricelist details[open] summary::after{content:"–"}
+.pricelist summary span{font-size:12px;color:var(--muted);font-weight:500;margin-left:6px}
+.pricelist ul{list-style:none;padding:0 2px 10px}
+.pricelist li{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px dashed rgba(255,255,255,.07);font-size:13px}
+.pl-name{color:#ddd8ce;line-height:1.35}
+.pl-price{color:var(--gold-2);font-weight:700;white-space:nowrap}
